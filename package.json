@@ -4,14 +4,14 @@
   "description": "Building storefront backend",
   "main": "server.ts",
   "scripts": {
-        "start": "node src/server.ts",
-        "watch": "tsc-watch --esModuleInterop src/server.ts --outDir ./dist --onSuccess 'node ./dist/server.js'",
-        "test": "npm run test-up && NODE_ENV=test jasmine-ts; npm run test-down",
-        "test-up": "db-migrate db:create storefront_test && db-migrate --env test up",
-        "test-down": "db-migrate db:drop storefront_test",
-        "build": "tsc",
-        "lint": "eslint '*/**/*.{js,ts}' --fix",
-        "prettier": "prettier --write ."
+    "start": "node src/server.ts",
+    "watch": "tsc-watch --esModuleInterop src/server.ts --outDir ./dist --onSuccess 'node ./dist/server.js'",
+    "test": "npm run test-up && NODE_ENV=test jasmine-ts; npm run test-down",
+    "test-up": "db-migrate db:create storefront_test && db-migrate --env test up",
+    "test-down": "db-migrate db:drop storefront_test",
+    "build": "tsc",
+    "lint": "eslint '*/**/*.{js,ts}' --fix",
+    "prettier": "prettier --write ."
   },
   "repository": {
     "type": "git",
