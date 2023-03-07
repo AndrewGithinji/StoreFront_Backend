@@ -9,12 +9,12 @@ beforeAll(async () => {
     await createTestOrders();
 });
 
-const createDemoToken = async () => {
+const createDemoToken = async (): Promise<string> => {
     return (await request(app).post('/users/demoUser').expect(201)).body;
 }
 
-const createTestProducts = async () => {
-    await request(app)
+const createTestProducts = async (): Promise<unknown> => {
+    return await request(app)
         .post('/products')
         .send({
             name: 'Test product',
@@ -34,8 +34,8 @@ const createTestProducts = async () => {
         .expect(201);
 }
 
-const createTestOrders = async () => {
-    await request(app)
+const createTestOrders = async (): Promise<unknown>=> {
+    return await request(app)
         .post('/orders')
         .auth(demoToken, { type: 'bearer' })
         .send({

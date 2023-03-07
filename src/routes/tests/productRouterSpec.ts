@@ -95,7 +95,7 @@ describe('POST /products', () => {
             });
             
             it('should respond with 401 if other user tries to update', async (): Promise<void> => {
-            const result = (
+            
             await request(app)
             .put('/products/1')
             .send({
@@ -105,8 +105,7 @@ describe('POST /products', () => {
             })
             .auth(demoToken, { type: 'bearer' })
             .expect(401)
-            ).body;
-            });
+            
             
             it('should respond with 500 if called incorrect', (done): void => {
                 request(app)
@@ -144,5 +143,5 @@ describe('POST /products', () => {
                     it('should respond with 200', (done): void => {
                         request(app).delete('/products/1').auth(demoToken, { type: 'bearer' }).expect(200, done);
                     });
-                });
-                
+                }),
+            });
