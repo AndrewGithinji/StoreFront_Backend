@@ -4,7 +4,6 @@ This project is part of the Full-Stack Javascript Nanodegree
 
 It provides an express application serving several API endpoints for storing and accessing data, located in a postgres database. It serves routes for users, orders and products. It uses JWT Token for authorization.
 
-
 ## Scripts
 
 Run prettier

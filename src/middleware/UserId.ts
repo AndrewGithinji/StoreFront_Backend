@@ -7,13 +7,13 @@ if (!TOKEN_SECRET) {
 }
 
 const verifyUserId = (req: Request, res: Response, next: NextFunction): void => {
-  const decodedToken = res.locals['decodedToken'];
-  const user_id = req.params['id'] ? parseInt(req.params['id'], 10) : req.body['id'] || req.body['user_id'];
-  if (!decodedToken || !decodedToken.user || decodedToken.user.id !== user_id) {
-    res.status(401).send('Unauthorized');
-    return;
-  }
-  next();
+    const decodedToken = res.locals['decodedToken'];
+    const user_id = req.params['id'] ? parseInt(req.params['id'], 10) : req.body['id'] || req.body['user_id'];
+    if (!decodedToken || !decodedToken.user || decodedToken.user.id !== user_id) {
+        res.status(401).send('Unauthorized');
+        return;
+    }
+    next();
 };
 
 export default verifyUserId;

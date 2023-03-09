@@ -6,15 +6,16 @@ import { ProductDB } from '../models/product';
 const orderStore = new OrderStore();
 const orderRouter = express.Router();
 
-const handleError = (res: Response, e: any) => {
+const handleError = (res: Response, e: unknown): void => {
     res.status(500).send(e);
-}
+};
 
-const handleSuccess = (res: Response, data: any, statusCode = 200) => {
+const handleSuccess = (res: Response, data: unknown, statusCode = 200): void => {
     res.status(statusCode).json(data);
-}
+};
 
-const handleRequest = async (fn: any) => {
+
+const handleRequest = async (fn: (req: Request) => Promise<unknown>): Promise<(req: Request, res: Response) => Promise<void>> => {
     return async (req: Request, res: Response) => {
         try {
             const result = await fn(req);
@@ -23,7 +24,7 @@ const handleRequest = async (fn: any) => {
             handleError(res, e);
         }
     }
-}
+};
 
 // Handler
 const addProductToOrder = handleRequest(async (req: Request) => {
@@ -53,6 +54,7 @@ const createOrder = handleRequest(async (req: Request) => {
     return orderProducts;
 });
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const getAllOrders = handleRequest(async (_req: Request) => {
     return await orderStore.getAllOrders();
 });
@@ -68,9 +70,10 @@ const getOrder = handleRequest(async (req: Request) => {
 
 const getProductsFromOrder = async (req: Request, res: Response): Promise<void> => {
     try {
-        const products = await orderStore.getProductsFromOrder(req.params.id);
+        const orderId = parseInt(req.params['id']);
+        const products = await orderStore.getProductsFromOrder(orderId);
         if (!products || !products.length) {
-            res.status(404).send(Could not find products for order ${ req.params.id });
+            res.status(404).send(`Could not find products for order ${ orderId }`);
             return;
         }
         res.json(products);
@@ -79,12 +82,13 @@ const getProductsFromOrder = async (req: Request, res: Response): Promise<void> 
     }
 };
 
+
 const getOrdersByUser = async (req: Request, res: Response): Promise<void> => {
-    const user_id = parseInt(req.params.id, 10);
+    const user_id = parseInt(req.params['id'], 10);
     try {
         const orders = await orderStore.getOrdersByUser(user_id);
         if (!orders || !orders.length) {
-            res.status(404).send(Could not find orders for user ${ user_id });
+            res.status(404).send(`Could not find orders for user ${user_id}`);
         } else {
             res.json(orders);
         }
@@ -93,8 +97,9 @@ const getOrdersByUser = async (req: Request, res: Response): Promise<void> => {
     }
 };
 
-const deleteOrder = async (req, res) => {
-    const order_id = parseInt(req.params.id);
+
+const deleteOrder = async (req: Request, res: Response): Promise<void> => {
+    const order_id = parseInt(req.params['id'], 10);
     try {
         const deletedOrder = await orderStore.deleteOrder(order_id);
         res.json(deletedOrder);
@@ -102,6 +107,7 @@ const deleteOrder = async (req, res) => {
         res.status(500).send(e);
     }
 };
+
 
 // Routes
 orderRouter.post('/:id/product', verifyAuthToken, addProductToOrder);

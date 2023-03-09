@@ -15,7 +15,17 @@ const getAllProducts = async (req: Request, res: Response): Promise<void> => {
         res.status(500).send(e);
     }
 };
-const getProduct = async (req: { params: { id: string; }; }, res: { status: (arg0: number) => { (): unknown; new(): unknown; json: { (arg0: unknown): void; new(): unknown; }; send: { (arg0: unknown): void; new(): unknown; }; }; }):Promise<void>=> {
+const getProduct = async (
+    req: { params: { id: string } },
+    res: {
+        status: (arg0: number) => {
+            (): unknown;
+            new (): unknown;
+            json: { (arg0: unknown): void; new (): unknown };
+            send: { (arg0: unknown): void; new (): unknown };
+        };
+    },
+): Promise<void> => {
     try {
         const product = await productStore.show(parseInt(req.params.id));
         if (product) {
@@ -27,7 +37,17 @@ const getProduct = async (req: { params: { id: string; }; }, res: { status: (arg
         res.status(500).send(e);
     }
 };
-const updateProduct = async (req: { params: { id: string; }; body: unknown; }, res: { status: (arg0: number) => { (): unknown; new(): unknown; json: { (arg0: unknown): void; new(): unknown; }; send: { (arg0: unknown): void; new(): unknown; }; }; }): Promise<void>=> {
+const updateProduct = async (
+    req: { params: { id: string }; body: unknown },
+    res: {
+        status: (arg0: number) => {
+            (): unknown;
+            new (): unknown;
+            json: { (arg0: unknown): void; new (): unknown };
+            send: { (arg0: unknown): void; new (): unknown };
+        };
+    },
+): Promise<void> => {
     try {
         const product_id = parseInt(req.params.id);
         const newProduct = req.body;
@@ -48,7 +68,17 @@ const updateProduct = async (req: { params: { id: string; }; body: unknown; }, r
         res.status(500).send(e);
     }
 };
-const addProduct = async (req: { body: unknown; }, res: { status: (arg0: number) => { (): unknown; new(): unknown; json: { (arg0: unknown): void; new(): unknown; }; send: { (arg0: unknown): void; new(): unknown; }; }; }): Promise<void>=> {
+const addProduct = async (
+    req: { body: unknown },
+    res: {
+        status: (arg0: number) => {
+            (): unknown;
+            new (): unknown;
+            json: { (arg0: unknown): void; new (): unknown };
+            send: { (arg0: unknown): void; new (): unknown };
+        };
+    },
+): Promise<void> => {
     try {
         const newProduct = req.body;
         const createdProduct = await productStore.create(newProduct);
@@ -57,7 +87,17 @@ const addProduct = async (req: { body: unknown; }, res: { status: (arg0: number)
         res.status(500).send(e);
     }
 };
-const deleteProduct = async (req: { params: { id: string; }; }, res: { status: (arg0: number) => { (): unknown; new(): unknown; json: { (arg0: unknown): void; new(): unknown; }; send: { (arg0: unknown): void; new(): unknown; }; }; }): Promise<void>=> {
+const deleteProduct = async (
+    req: { params: { id: string } },
+    res: {
+        status: (arg0: number) => {
+            (): unknown;
+            new (): unknown;
+            json: { (arg0: unknown): void; new (): unknown };
+            send: { (arg0: unknown): void; new (): unknown };
+        };
+    },
+): Promise<void> => {
     try {
         const product_id = parseInt(req.params.id);
         const deletedProduct = await productStore.delete(product_id);

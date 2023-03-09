@@ -46,7 +46,17 @@ const addDemoUser = async (req: Request, res: Response): Promise<void> => {
             throw new Error('Missing env variable: DEMO_USER_PASSWORD');
         }
         const newUser = await userStore.create(user);
-        const token = jwt.sign({ user: { id: newUser.id, first_name: newUser.first_name, last_name: newUser.last_name, email: newUser.email } }, process.env.TOKEN_SECRET);
+        const token = jwt.sign(
+            {
+                user: {
+                    id: newUser.id,
+                    first_name: newUser.first_name,
+                    last_name: newUser.last_name,
+                    email: newUser.email,
+                },
+            },
+            process.env.TOKEN_SECRET,
+        );
         res.status(201).json(token);
     } catch (e) {
         res.status(500).send(e);
@@ -60,7 +70,17 @@ const addUser = async (req: Request, res: Response): Promise<void> => {
         }
         const user: User = req.body;
         const newUser: UserDB = await userStore.create(user);
-        const token = jwt.sign({ user: { id: newUser.id, first_name: newUser.first_name, last_name: newUser.last_name, email: newUser.email } }, TOKEN_SECRET);
+        const token = jwt.sign(
+            {
+                user: {
+                    id: newUser.id,
+                    first_name: newUser.first_name,
+                    last_name: newUser.last_name,
+                    email: newUser.email,
+                },
+            },
+            TOKEN_SECRET,
+        );
         res.status(201).json(token);
     } catch (e) {
         res.status(500).send(e);
@@ -105,14 +125,17 @@ const authenticateUser = async (req: Request, res: Response): Promise<void> => {
         return;
     }
 
-    const token = jwt.sign({
-        user: {
-            id: authUser.id,
-            first_name: authUser.first_name,
-            last_name: authUser.last_name,
-            email: authUser.email,
+    const token = jwt.sign(
+        {
+            user: {
+                id: authUser.id,
+                first_name: authUser.first_name,
+                last_name: authUser.last_name,
+                email: authUser.email,
+            },
         },
-    }, TOKEN_SECRET);
+        TOKEN_SECRET,
+    );
 
     res.status(200).json(token);
 };
