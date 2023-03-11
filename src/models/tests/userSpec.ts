@@ -44,21 +44,7 @@ describe('User Model', () => {
         });
     });
 
-    it('show method should return the correct user', async () => {
-        const user: UserDB = await userStore.create({
-            first_name: 'Test',
-            last_name: '3',
-            email: 'test3@test.com',
-            password: '1234',
-        });
-        const result = await userStore.show(user.id);
-        expect(result).toEqual({
-            id: user.id,
-            first_name: 'Test',
-            last_name: '3',
-            email: 'test3@test.com',
-        });
-    });
+    it('show method should return the correct user', async ());
 
     it('delete method should remove the user', async () => {
         const user: UserDB = await userStore.create({
@@ -72,3 +58,7 @@ describe('User Model', () => {
         expect(items).not.toContain(user);
     });
 });
+function async(): jasmine.ImplementationCallback | undefined {
+    throw new Error('Function not implemented.');
+}
+

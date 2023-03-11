@@ -4,13 +4,14 @@ import verifyAuthToken from '../middleware/VerifyAuthToken';
 import verifyUserId from '../middleware/UserId';
 import { User, UserDB, UserStore } from './../models/user';
 
+
 const userStore = new UserStore();
 const userRouter = express.Router();
 
-const { TOKEN_SECRET, DEMO_USER_PASSWORD } = process.env;
+const { TOKEN_SECRET } = process.env;
 
 // Handler
-const getAllUsers = async (req, res) => {
+const getAllUsers = async (req: Request, res: Response): Promise<void> => {
     try {
         const users = await userStore.index();
         res.json(users);
@@ -19,30 +20,32 @@ const getAllUsers = async (req, res) => {
     }
 };
 
-const getUser = async (req, res) => {
+
+const getUser = async (req: Request, res: Response): Promise<void> => {
     try {
-        const user = await userStore.show(parseInt(req.params.id));
-        if (user) {
-            res.status(200).json(user);
-        } else {
-            res.status(404).send('User not found.');
-        }
+      const user = userStore.show(parseInt(req.params['id']));
+      if (user !== undefined) {
+        res.status(200).json(user);
+      } else {
+        res.status(404).send('User not found.');
+      }
     } catch (e) {
-        res.status(500).send(e);
+      res.status(500).send(e);
     }
 };
+
 const addDemoUser = async (req: Request, res: Response): Promise<void> => {
     const user = {
         first_name: 'John',
         last_name: 'Doe',
         email: 'john.doe@test.com',
-        password: process.env.DEMO_USER_PASSWORD,
+        password: process.env['DEMO_USER_PASSWORD'],
     };
     try {
-        if (!process.env.TOKEN_SECRET) {
+        if (!process.env['TOKEN_SECRET']) {
             throw new Error('Missing env variable: TOKEN_SECRET');
         }
-        if (!process.env.DEMO_USER_PASSWORD) {
+        if (!process.env['DEMO_USER_PASSWORD']) {
             throw new Error('Missing env variable: DEMO_USER_PASSWORD');
         }
         const newUser = await userStore.create(user);
@@ -55,7 +58,7 @@ const addDemoUser = async (req: Request, res: Response): Promise<void> => {
                     email: newUser.email,
                 },
             },
-            process.env.TOKEN_SECRET,
+            process.env['TOKEN_SECRET'],
         );
         res.status(201).json(token);
     } catch (e) {
@@ -86,7 +89,7 @@ const addUser = async (req: Request, res: Response): Promise<void> => {
         res.status(500).send(e);
     }
 };
-const updateUser = async (req: Request, res: Response): Promise<void> => {
+const updateUser = async (req: Request, res: Response): Promise<Response<unknown, Record<string, unknown>>> => {
     const user: UserDB = req.body;
     const user_id: number = parseInt(req.params['id'], 10);
     try {
@@ -94,11 +97,14 @@ const updateUser = async (req: Request, res: Response): Promise<void> => {
         const updatedUser = await userStore.update(user_id, user);
         if (!updatedUser) return res.status(404).send('User not found.');
         const token = jwt.sign({ user: updatedUser }, TOKEN_SECRET);
-        res.status(200).json(token);
+        return res.status(200).send(token);
     } catch (e) {
-        res.status(500).send(e);
+        return res.status(500).send(e);
     }
 };
+
+
+
 
 const deleteUser = async (req: Request, res: Response): Promise<void> => {
     try {

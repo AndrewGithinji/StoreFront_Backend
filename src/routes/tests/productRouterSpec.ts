@@ -143,5 +143,5 @@ describe('POST /products', () => {
                     it('should respond with 200', (done): void => {
                         request(app).delete('/products/1').auth(demoToken, { type: 'bearer' }).expect(200, done);
                     });
-                }),
-            });
+                });
+            })

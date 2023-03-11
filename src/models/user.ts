@@ -15,8 +15,15 @@ export interface UserDB extends User {
 const { BCRYPT_PASSWORD, SALT_ROUNDS } = process.env;
 
 export class UserStore {
+    delete: any;
+    update: any;
+    authenticate: any;
+    create: any;
+    show(arg0: number) {
+        throw new Error('Method not implemented.');
+    }
     async index(): Promise<UserDB[]> {
-      let connection: PoolClient;
+      let connection: PoolClient | null = null;
       try {
         connection = await client.connect();
         const sql = 'SELECT * FROM users;';
@@ -25,10 +32,11 @@ export class UserStore {
       } catch (err) {
         throw new Error(`Cannot get users ${ err }`);
       } finally {
-        connection.release();
+        if (connection) connection.release();
       }
     }
   }
+  
 async function getUserById({ id }: { id: number; }): Promise<UserDB> {
     const connection = await client.connect();
     try {
@@ -46,24 +54,40 @@ async function getUserById({ id }: { id: number; }): Promise<UserDB> {
 async function createUser(user: User): Promise<UserDB> {
     const connection = await client.connect();
     try {
-        const existingUserSQL = 'SELECT * from users where email=$1';
-        const SQL = 'INSERT INTO users (first_name, last_name, email, password) VALUES ($1, $2, $3, $4) RETURNING *';
-        if (!BCRYPT_PASSWORD || !SALT_ROUNDS) {
-            throw new Error('Missing environment variable: BCRYPT_PASSWORD or SALT_ROUNDS');
-        }
-
-        if (!user.first_name || !user.last_name || !user.email || !user.password) {
-            throw new Error('Missing user properties');
-        }
-
-        const existingUser = (await connection.query(existingUserSQL, [user.email])).rows[0];
-        if (existingUser) {
-            return existingUser;
-        }
+      const existingUserSQL = 'SELECT * from users where email=$1';
+      const SQL =
+        'INSERT INTO users (first_name, last_name, email, password) VALUES ($1, $2, $3, $4) RETURNING *';
+      if (!BCRYPT_PASSWORD || !SALT_ROUNDS) {
+        throw new Error('Missing environment variable: BCRYPT_PASSWORD or SALT_ROUNDS');
+      }
+  
+      if (!user.first_name || !user.last_name || !user.email || !user.password) {
+        throw new Error('Missing user properties');
+      }
+  
+      const existingUser = (await connection.query(existingUserSQL, [user.email])).rows[0];
+      if (existingUser) {
+        return existingUser;
+      }
+  
+      const hash = bcrypt.hashSync(
+        user.password + (BCRYPT_PASSWORD || ''),
+        parseInt(SALT_ROUNDS || '10')
+      );
+      const newUser = (await connection.query(SQL, [
+        user.first_name,
+        user.last_name,
+        user.email,
+        hash,
+      ])).rows[0];
+      return newUser;
+    } catch (err) {
+      throw new Error(`Could not create user ${user.email}. Error: ${err}`);
     } finally {
-        connection.release();
+      connection.release();
     }
-}
+  }
+  
 async function updateUser(id: any, user: { password: string | number; first_name: any; last_name: any; email: any; }) {
     try {
         const connection = await client.connect();
@@ -81,7 +105,7 @@ async function updateUser(id: any, user: { password: string | number; first_name
         }
 
         async function updateUser(id: number, user: User): Promise<UserDB> {
-            let connection: PoolClient;
+            let connection: PoolClient | undefined;
             try {
               connection = await client.connect();
               const hash = bcrypt.hashSync(
@@ -102,7 +126,8 @@ async function updateUser(id: any, user: { password: string | number; first_name
             } finally {
               if (connection) connection.release();
             }
-          }
+          
+        }
           
 async function removeUser(id: number): Promise<UserDB> {
             const connection = await client.connect();
@@ -117,20 +142,22 @@ async function removeUser(id: number): Promise<UserDB> {
             } finally {
                 connection.release();
             }
-        }
+        
         
 }
 
 async function authenticate(email: string, password: string): Promise<UserDB | null> {
     const connection: PoolClient = await client.connect();
     try {
-        const user: UserDB = (await connection.query('SELECT * FROM users where email=($1);', [email])).rows[0];
-        if (!user) {
-            throw new Error('User not found');
-        }
-        return bcrypt.compareSync(password + BCRYPT_PASSWORD, user.password || '') ? user : null;
+      const user: UserDB = (await connection.query('SELECT * FROM users where email=($1);', [email])).rows[0];
+      if (!user) {
+        throw new Error('User not found');
+      }
+      return bcrypt.compareSync(password + BCRYPT_PASSWORD, user.password || '') ? user : null;
     } catch (err) {
-        throw new Error(`Failed to authenticate user: ${err}`);
+      throw new Error(`Failed to authenticate user: ${err}`);
     } finally {
-        connection.release();
+      connection.release();
+    }
+}
     }

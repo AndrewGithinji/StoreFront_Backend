@@ -11,12 +11,14 @@ const product = await productStore.create({
     price: 0,
     category: 'Test',
 });
+const user = userStore.show(user);
 const result: OrderProductDB[] = await orderStore.createOrder(user.id, [
-    {
-        product_id: product.id,
-        quantity: 12,
-    },
+  {
+    product_id: product.id,
+    quantity: 12,
+  },
 ]);
+
 expect(result).toEqual([
     {
         id: result[0].id,
@@ -25,7 +27,7 @@ expect(result).toEqual([
         quantity: 12,
     },
 ]);
-});
+
 
 it('getAllOrders method should return a list of orders', async () => {
 const user = await userStore.create({

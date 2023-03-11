@@ -1,7 +1,6 @@
-import { OrderStore, OrderProduct, OrderProductDB, DeletedOrder, OrderDB } from './../models/order';
+import { OrderStore, OrderProduct, OrderProductDB, OrderDB } from './../models/order';
 import express, { Request, Response } from 'express';
 import verifyAuthToken from '../middleware/VerifyAuthToken';
-import { ProductDB } from '../models/product';
 
 const orderStore = new OrderStore();
 const orderRouter = express.Router();

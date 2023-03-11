@@ -1,5 +1,5 @@
-import { Product, ProductDB } from './../models/product';
 import express, { Request, Response } from 'express';
+import { Product } from '../models/product';
 import { ProductStore } from '../models/product';
 import verifyAuthToken from '../middleware/VerifyAuthToken';
 
@@ -16,18 +16,11 @@ const getAllProducts = async (req: Request, res: Response): Promise<void> => {
     }
 };
 const getProduct = async (
-    req: { params: { id: string } },
-    res: {
-        status: (arg0: number) => {
-            (): unknown;
-            new (): unknown;
-            json: { (arg0: unknown): void; new (): unknown };
-            send: { (arg0: unknown): void; new (): unknown };
-        };
-    },
+    req: Request,
+    res: Response,
 ): Promise<void> => {
     try {
-        const product = await productStore.show(parseInt(req.params.id));
+        const product = await productStore.show(parseInt(req.params['id']));
         if (product) {
             res.status(200).json(product);
         } else {
@@ -38,19 +31,12 @@ const getProduct = async (
     }
 };
 const updateProduct = async (
-    req: { params: { id: string }; body: unknown },
-    res: {
-        status: (arg0: number) => {
-            (): unknown;
-            new (): unknown;
-            json: { (arg0: unknown): void; new (): unknown };
-            send: { (arg0: unknown): void; new (): unknown };
-        };
-    },
+    req: Request,
+    res: Response,
 ): Promise<void> => {
     try {
-        const product_id = parseInt(req.params.id);
-        const newProduct = req.body;
+        const product_id = parseInt(req.params['id']);
+        const newProduct = req.body as Product;
 
         if (!newProduct.category || !newProduct.name || !newProduct.price) {
             throw new Error('Missing product properties');
@@ -69,15 +55,8 @@ const updateProduct = async (
     }
 };
 const addProduct = async (
-    req: { body: unknown },
-    res: {
-        status: (arg0: number) => {
-            (): unknown;
-            new (): unknown;
-            json: { (arg0: unknown): void; new (): unknown };
-            send: { (arg0: unknown): void; new (): unknown };
-        };
-    },
+    req: Request,
+    res: Response,
 ): Promise<void> => {
     try {
         const newProduct = req.body;
@@ -88,18 +67,11 @@ const addProduct = async (
     }
 };
 const deleteProduct = async (
-    req: { params: { id: string } },
-    res: {
-        status: (arg0: number) => {
-            (): unknown;
-            new (): unknown;
-            json: { (arg0: unknown): void; new (): unknown };
-            send: { (arg0: unknown): void; new (): unknown };
-        };
-    },
+    req: Request,
+    res: Response,
 ): Promise<void> => {
     try {
-        const product_id = parseInt(req.params.id);
+        const product_id = parseInt(req.params['id']);
         const deletedProduct = await productStore.delete(product_id);
         res.status(200).json(deletedProduct);
     } catch (e) {
