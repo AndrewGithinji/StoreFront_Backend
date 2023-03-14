@@ -41,15 +41,15 @@ export class ProductStore {
     async create(product: Product): Promise<ProductDB> {
         const connection = await client.connect();
         try {
-            await connection.query("BEGIN");
-            const sql = "INSERT INTO products (name, price, category) VALUES ($1, $2, $3) RETURNING *";
+            await connection.query('BEGIN');
+            const sql = 'INSERT INTO products (name, price, category) VALUES ($1, $2, $3) RETURNING *';
             const values = [product.name, product.price, product.category];
             const result = await connection.query(sql, values);
             const createdProduct = result.rows[0];
-            await connection.query("COMMIT");
+            await connection.query('COMMIT');
             return createdProduct;
         } catch (err) {
-            await connection.query("ROLLBACK");
+            await connection.query('ROLLBACK');
             throw new Error(`Failed to create product ${product.name}. Error: ${err}`);
         } finally {
             connection.release();
@@ -85,10 +85,10 @@ export class ProductStore {
             await connection.query('COMMIT');
             return deletedProduct;
         } catch (err) {
-          await connection.query('ROLLBACK');
-          throw new Error(`Could not delete product. Error: ${err}`);
+            await connection.query('ROLLBACK');
+            throw new Error(`Could not delete product. Error: ${err}`);
         } finally {
-          connection.release();
+            connection.release();
         }
-      }
     }
+}

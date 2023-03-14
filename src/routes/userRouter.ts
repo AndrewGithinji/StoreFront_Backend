@@ -4,7 +4,6 @@ import verifyAuthToken from '../middleware/VerifyAuthToken';
 import verifyUserId from '../middleware/UserId';
 import { User, UserDB, UserStore } from './../models/user';
 
-
 const userStore = new UserStore();
 const userRouter = express.Router();
 
@@ -20,17 +19,16 @@ const getAllUsers = async (req: Request, res: Response): Promise<void> => {
     }
 };
 
-
 const getUser = async (req: Request, res: Response): Promise<void> => {
     try {
-      const user = userStore.show(parseInt(req.params['id']));
-      if (user !== undefined) {
-        res.status(200).json(user);
-      } else {
-        res.status(404).send('User not found.');
-      }
+        const user = userStore.show(parseInt(req.params['id']));
+        if (user !== undefined) {
+            res.status(200).json(user);
+        } else {
+            res.status(404).send('User not found.');
+        }
     } catch (e) {
-      res.status(500).send(e);
+        res.status(500).send(e);
     }
 };
 
@@ -102,9 +100,6 @@ const updateUser = async (req: Request, res: Response): Promise<Response<unknown
         return res.status(500).send(e);
     }
 };
-
-
-
 
 const deleteUser = async (req: Request, res: Response): Promise<void> => {
     try {

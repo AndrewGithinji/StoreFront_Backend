@@ -44,7 +44,7 @@ describe('User Model', () => {
         });
     });
 
-    it('show method should return the correct user', async ());
+    it('show method should return the correct user', async());
 
     it('delete method should remove the user', async () => {
         const user: UserDB = await userStore.create({
@@ -61,4 +61,3 @@ describe('User Model', () => {
 function async(): jasmine.ImplementationCallback | undefined {
     throw new Error('Function not implemented.');
 }
-
