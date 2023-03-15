@@ -4,7 +4,7 @@
     "description": "Building storefront backend",
     "main": "server.ts",
     "scripts": {
-        "start": "node src/server.ts",
+        "start": "nodemon src/server.ts",
         "watch": "tsc-watch --esModuleInterop src/server.ts --outDir ./dist --onSuccess 'node ./dist/server.js'",
         "test": "npm run test-up && NODE_ENV=test jasmine-ts; npm run test-down",
         "test-up": "db-migrate db:create storefront_test && db-migrate --env test up",
@@ -52,7 +52,7 @@
         "jasmine": "^4.5.0",
         "jasmine-spec-reporter": "^7.0.0",
         "jasmine-ts": "^0.4.0",
-        "nodemon": "^2.0.20",
+        "nodemon": "^2.0.21",
         "prettier": "^2.8.3",
         "ts-node": "^10.9.1",
         "tsc-watch": "^6.0.0",
