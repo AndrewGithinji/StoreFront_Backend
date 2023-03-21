@@ -1,7 +1,7 @@
 import { PoolClient } from 'pg';
 import client from '../database';
 import bcrypt from 'bcrypt';
-
+import dotenv from 'dotenv'
 export interface User {
     first_name: string;
     last_name: string;
@@ -12,7 +12,7 @@ export interface User {
 export interface UserDB extends User {
     readonly id: number;
 }
-
+dotenv.config()
 const { BCRYPT_PASSWORD, SALT_ROUNDS } = process.env;
 
 export class UserStore {

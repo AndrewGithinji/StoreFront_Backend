@@ -1,7 +1,7 @@
 import express, { Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
 import verifyAuthToken from '../middleware/VerifyAuthToken';
-import verifyUserId from '../middleware/UserId';
+import verifyUserId from '../middleware/VerifyuserId';
 import { User, UserDB, UserStore } from './../models/user';
 
 const userStore = new UserStore();
@@ -71,6 +71,7 @@ const addUser = async (req: Request, res: Response): Promise<void> => {
         }
         const user: User = req.body;
         const newUser: UserDB = await userStore.create(user);
+        console.log(newUser)
         const token = jwt.sign(
             {
                 user: {
@@ -146,7 +147,7 @@ userRouter.get('/', verifyAuthToken, getAllUsers);
 userRouter.get('/:id', verifyAuthToken, getUser);
 userRouter.post('/login', authenticateUser);
 userRouter.post('/demoUser', addDemoUser);
-userRouter.post('/', verifyAuthToken, addUser);
+userRouter.post('/', addUser);
 userRouter.put('/:id', [verifyAuthToken, verifyUserId], updateUser);
 userRouter.delete('/:id', [verifyAuthToken, verifyUserId], deleteUser);
 

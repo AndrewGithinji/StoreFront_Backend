@@ -12,7 +12,7 @@ export interface ProductDB extends Product {
 }
 
 export class ProductStore {
-    delete: any;
+    
     async index(): Promise<ProductDB[]> {
         let connection: PoolClient | null = null;
         try {
@@ -74,7 +74,7 @@ export class ProductStore {
         }
     }
 
-    async deleteProduct(id: number): Promise<ProductDB> {
+    async delete(id: number): Promise<ProductDB> {
         const connection = await client.connect();
         try {
             await connection.query('BEGIN');
