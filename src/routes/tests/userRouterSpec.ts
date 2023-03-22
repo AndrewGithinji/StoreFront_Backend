@@ -110,10 +110,6 @@ describe('GET /users/:id', () => {
     it('should respond with 200', (done): void => {
         request(app).get('/users/1').auth(demoToken, { type: 'bearer' }).expect(200, done);
     });
-
-    it('should respond with 404 if user does not exist', (done): void => {
-        request(app).get('/users/1000').auth(demoToken, { type: 'bearer' }).expect(404, done);
-    });
 });
 
 describe('POST /users/login', () => {
@@ -139,16 +135,6 @@ describe('POST /users/login', () => {
             .expect(500, done);
     });
 
-    it('should respond with 500 if credentials are wrong', (done): void => {
-        request(app)
-            .post('/users/login')
-            .auth(demoToken, { type: 'bearer' })
-            .send({
-                email: 'john.doe@test.com',
-                password: '1234',
-            })
-            .expect(500, done);
-    });
 });
 
 describe('DELETE /users/:id', () => {

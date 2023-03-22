@@ -71,7 +71,6 @@ const addUser = async (req: Request, res: Response): Promise<void> => {
         }
         const user: User = req.body;
         const newUser: UserDB = await userStore.create(user);
-        console.log(newUser)
         const token = jwt.sign(
             {
                 user: {
@@ -113,33 +112,40 @@ const deleteUser = async (req: Request, res: Response): Promise<void> => {
 };
 
 const authenticateUser = async (req: Request, res: Response): Promise<void> => {
-    const email = req.body.email;
-    const password = req.body.password;
+   try{
 
-    if (!TOKEN_SECRET) {
-        res.status(500).send('Missing env variable: TOKEN_SECRET');
-        return;
-    }
-
-    const authUser = await userStore.authenticate(email, password);
-    if (!authUser) {
-        res.status(401).send('Could not authenticate user. Wrong credentials');
-        return;
-    }
-
-    const token = jwt.sign(
-        {
-            user: {
-                id: authUser.id,
-                first_name: authUser.first_name,
-                last_name: authUser.last_name,
-                email: authUser.email,
-            },
-        },
-        TOKEN_SECRET,
-    );
-
-    res.status(200).json(token);
+       const email = req.body.email;
+       const password = req.body.password;
+   
+       if (!TOKEN_SECRET) {
+           res.status(500).send('Missing env variable: TOKEN_SECRET');
+           return;
+       }
+   
+       const authUser = await userStore.authenticate(email, password);
+       if (!authUser) {
+           res.status(401).send('Could not authenticate user. Wrong credentials');
+           return;
+       }
+   
+       const token = jwt.sign(
+           {
+               user: {
+                   id: authUser.id,
+                   first_name: authUser.first_name,
+                   last_name: authUser.last_name,
+                   email: authUser.email,
+               },
+           },
+           TOKEN_SECRET,
+       );
+   
+       res.status(200).json(token);
+   }
+   catch(err){
+    res.status (500)
+    res.json(err)
+   }
 };
 
 // Routes
@@ -147,7 +153,7 @@ userRouter.get('/', verifyAuthToken, getAllUsers);
 userRouter.get('/:id', verifyAuthToken, getUser);
 userRouter.post('/login', authenticateUser);
 userRouter.post('/demoUser', addDemoUser);
-userRouter.post('/', addUser);
+userRouter.post('/', verifyAuthToken, addUser);
 userRouter.put('/:id', [verifyAuthToken, verifyUserId], updateUser);
 userRouter.delete('/:id', [verifyAuthToken, verifyUserId], deleteUser);
 

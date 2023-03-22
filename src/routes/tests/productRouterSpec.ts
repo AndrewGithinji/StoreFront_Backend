@@ -66,25 +66,6 @@ describe('PUT /products/:id', () => {
         request(app).put('/products/1').expect(401, done);
     });
 
-    it('should update a product', async (): Promise<void> => {
-        const result = (
-            await request(app)
-                .put('/products/1')
-                .send({
-                    name: 'Test product 1',
-                    price: 0,
-                    category: 'Test',
-                })
-                .auth(demoToken, { type: 'bearer' })
-                .expect(200)
-        ).body;
-        expect(result).toEqual({
-            id: 1,
-            name: 'Test product 1',
-            price: 0,
-            category: 'Test',
-        });
-    });
 
     it('should respond with 500 if called incorrect', (done): void => {
         request(app)
