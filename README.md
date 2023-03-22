@@ -92,7 +92,9 @@ To run tests, run the following command
   npm run test
 ```
 ## Image of tests passing
-<img src = "./Tests.png" >
+<img src = "./jt1.png" >
+<img src = "./jt2.png" >
+<img src = "./jt3.png" >
 ## Author
 
 Andrew Githinji ((https://github.com/AndrewGithinji))
