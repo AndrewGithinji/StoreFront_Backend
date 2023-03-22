@@ -91,7 +91,10 @@ To run tests, run the following command
 ```bash
   npm run test
 ```
-
+## Image of tests passing
+<img src = "./Tests.png" >
 ## Author
 
 Andrew Githinji ((https://github.com/AndrewGithinji))
+
+
